@@ -2,12 +2,13 @@
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import "dotenv/config";
-import express, { Express } from "express";
+import express, { Express, Request, Response } from "express";
 import mongoose from "mongoose";
 import cron from "node-cron";
 import path from "path";
 // File Imports
-import { expenseRouter, incomeRouter } from "./routes/router";
+import transactionRouter from "./routes/router";
+import { UserDocument } from "./models/userModel";
 
 // Creating Backend Application
 const app: Express = express();
@@ -21,14 +22,24 @@ app.set("view-engine", "ejs");
 app.set("views", path.resolve("./views"));
 
 // Routes
-app.use("/expense", expenseRouter);
-app.use("/income", incomeRouter);
+app.use("/transaction", transactionRouter);
+app.use("/user/getUser", (req: Request, res: Response) => {
+  const user: UserDocument = req.user;
+
+  try {
+    return res.status(200).json({ user });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send("Internal server error");
+  }
+});
 
 // OTP Cleanup
 cron.schedule(
   "0 * * * *",
   async () => {
     try {
+      
     } catch (error) {}
   },
   {

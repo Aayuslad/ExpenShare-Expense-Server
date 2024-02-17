@@ -1,14 +1,10 @@
 import { Router } from "express";
-import * as expenseController from "../controllers/expenseController";
+import * as transactionController from "../controllers/transactionController";
 import upload from "../middlewares/multer";
-const expenseRouter: Router = Router();
-const incomeRouter: Router = Router();
+const transactionRouter: Router = Router();
 
-expenseRouter.post(
-  "/add",
-  upload.single("invoice"),
-  expenseController.addExpense
-);
+transactionRouter
+  .post("/add", upload.single("invoice"), transactionController.addTransaction)
+  .post("/getAll", transactionController.getAllTransactions);
 
-export { expenseRouter, incomeRouter };
-
+export default transactionRouter;
